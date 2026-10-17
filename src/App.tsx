@@ -14,6 +14,12 @@ import { IntentPolicyLoader } from '@/components/IntentPolicyLoader';
 import IntentsAdmin from '@/pages/IntentsAdmin';
 import AppMap from '@/pages/AppMap';
 // <custom:imports>
+const IntentEntscheidungFesthaltenPage = lazy(() => import('@/pages/intents/EntscheidungFesthaltenPage'));
+import { DashboardSkeleton } from '@/components/DashboardStates';
+const IntentAnnahmePruefenPage = lazy(() => import('@/pages/intents/AnnahmePruefenPage'));
+const IntentErkenntnisErfassenPage = lazy(() => import('@/pages/intents/ErkenntnisErfassenPage'));
+const IntentRegelAbleitenPage = lazy(() => import('@/pages/intents/RegelAbleitenPage'));
+const IntentRegelFreigebenPage = lazy(() => import('@/pages/intents/RegelFreigebenPage'));
 // </custom:imports>
 
 // Lazy: public pages live outside <Layout> and only load on /#/public/:slug —
@@ -85,6 +91,11 @@ export default function App() {
                 <Route path="verwaltung/oeffentliche-seiten" element={<PublicPagesAdmin />} />
                 <Route path="verwaltung/oeffentliche-seiten/:slug/felder" element={<PublicPageFields />} />
                 {/* <custom:routes> */}
+                <Route path="intents/entscheidung-festhalten" element={<Suspense fallback={<DashboardSkeleton />}><IntentEntscheidungFesthaltenPage /></Suspense>} />
+                <Route path="intents/annahme-pruefen" element={<Suspense fallback={<DashboardSkeleton />}><IntentAnnahmePruefenPage /></Suspense>} />
+                <Route path="intents/erkenntnis-erfassen" element={<Suspense fallback={<DashboardSkeleton />}><IntentErkenntnisErfassenPage /></Suspense>} />
+                <Route path="intents/regel-ableiten" element={<Suspense fallback={<DashboardSkeleton />}><IntentRegelAbleitenPage /></Suspense>} />
+                <Route path="intents/regel-freigeben" element={<Suspense fallback={<DashboardSkeleton />}><IntentRegelFreigebenPage /></Suspense>} />
                 {/* </custom:routes> */}
                 {/* An unknown hash (a bookmark from before a rebuild renamed the
                     flows, a mistyped link) must not be a blank page. */}

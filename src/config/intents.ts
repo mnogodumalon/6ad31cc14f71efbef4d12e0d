@@ -20,6 +20,7 @@
 import type { ComponentType } from 'react';
 
 // <custom:intent-imports>
+import { IconGavel, IconChecklist, IconBulb, IconRulerMeasure, IconRosetteDiscountCheck } from '@tabler/icons-react';
 // </custom:intent-imports>
 
 export interface IntentLink {
@@ -42,6 +43,11 @@ export interface IntentLink {
 
 export const INTENTS: IntentLink[] = [
   // <custom:intents>
+  { path: '/intents/entscheidung-festhalten', label: { de: 'Entscheidung festhalten', en: 'Record a decision' }, icon: IconGavel, description: 'Eine Entscheidung zu einem Vorgang erfassen, mit Alternativen, Begründung, Herkunft und Gewissheit, und dabei gleich Annahmen festhalten, auf denen sie beruht.' },
+  { path: '/intents/annahme-pruefen', label: { de: 'Annahme prüfen', en: 'Review an assumption' }, icon: IconChecklist, description: 'Eine offene Annahme bestätigen oder widerlegen, mit Beleg, und bei Bedarf direkt eine Erkenntnis daraus festhalten.' },
+  { path: '/intents/erkenntnis-erfassen', label: { de: 'Erkenntnis erfassen', en: 'Capture a finding' }, icon: IconBulb, description: 'Eine Erkenntnis zu einem Vorgang erfassen und mit Entscheidung oder Annahme verknüpfen, mit Gewissheit und Herkunft.' },
+  { path: '/intents/regel-ableiten', label: { de: 'Regel ableiten', en: 'Derive a rule' }, icon: IconRulerMeasure, description: 'Aus einer Erkenntnis oder Entscheidung eine neue Regel als Entwurf anlegen. Freigabe bleibt ein eigener, menschlicher Schritt.' },
+  { path: '/intents/regel-freigeben', label: { de: 'Regel freigeben', en: 'Approve a rule' }, icon: IconRosetteDiscountCheck, description: 'Eine Regel im Entwurf durch eine Person freigeben oder als überholt markieren. Die KI gibt nie frei.' },
   // </custom:intents>
 ];
 
@@ -52,7 +58,7 @@ export const INTENTS: IntentLink[] = [
  * purpose — a scaffold update resets it to false (self-healing if Phase 2
  * never ran).
  */
-export const INTENTS_PENDING = true;
+export const INTENTS_PENDING = false;
 
 /**
  * When the Phase-1 bundle was deployed (ISO, set by the service together with
