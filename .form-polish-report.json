@@ -1,0 +1,47 @@
+{
+  "entities": {
+    "Vorgänge": {
+      "placeholders_set": 10,
+      "defaults_keys": [
+        "status",
+        "startdatum"
+      ],
+      "computed_keys": [
+        "_vorgang_dauer_tage"
+      ],
+      "reason": "Start- und Abschlussdatum bilden ein Paar, daher eine Dauer in Tagen als virtuelles Feld; keine Preise vorhanden."
+    },
+    "Entscheidungen": {
+      "placeholders_set": 9,
+      "defaults_keys": [
+        "entscheidungsdatum"
+      ],
+      "computed_keys": [],
+      "reason": "Keine Formeln, da der Eintrag aus Text- und Auswahlfeldern ohne numerische Berechnung besteht."
+    },
+    "Annahmen": {
+      "placeholders_set": 7,
+      "defaults_keys": [
+        "status"
+      ],
+      "computed_keys": [],
+      "reason": "Keine Formeln, da die Annahmen reine Stamm- und Textdaten ohne numerische Berechnung sind."
+    },
+    "Erkenntnisse": {
+      "placeholders_set": 7,
+      "defaults_keys": [
+        "erfassungsdatum"
+      ],
+      "computed_keys": [],
+      "reason": "Keine Formeln, da das Formular nur Stammdaten und Text ohne numerische Felder enthält; das Erfassungsdatum erhält heute als Standard."
+    },
+    "Regeln": {
+      "placeholders_set": 10,
+      "defaults_keys": [
+        "status"
+      ],
+      "computed_keys": [],
+      "reason": "Keine Formeln, da die Regeln reine Text- und Stammdaten ohne numerische Berechnung sind; der Status startet als Entwurf."
+    }
+  }
+}

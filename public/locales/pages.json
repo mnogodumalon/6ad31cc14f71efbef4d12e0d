@@ -1,0 +1,42 @@
+{
+  "pages": {
+    "en": {
+      "Alle Annahmen sind geprüft und alle Regeln aktuell.": "All assumptions are reviewed and all rules are up to date.",
+      "Als Nächstes zu prüfen: „{0}“.": "Next to review: \"{0}\".",
+      "Annahme erfassen": "Record assumption",
+      "Annahmen zu prüfen": "Assumptions to review",
+      "Dein Gedächtnis ist noch leer — erfasse den ersten Vorgang.": "Your memory is still empty — record the first case.",
+      "Die Regel „{0}“ wartet auf ihre Überprüfung.": "The rule \"{0}\" is awaiting its review.",
+      "Erkenntnis erfassen": "Record insight",
+      "Erkenntnisse nach Gewissheit": "Insights by certainty",
+      "Ersten Vorgang erfassen": "Record first case",
+      "Gewissheit": "Certainty",
+      "Gewissheit offen": "Certainty open",
+      "Halte fest, was deine Organisation über ihre Arbeit weiß — Anforderungen, Entscheidungen, Annahmen und Regeln.": "Capture what your organization knows about its work — requirements, decisions, assumptions, and rules.",
+      "Herkunft offen": "Source open",
+      "Keine offenen Annahmen — alles bestätigt oder widerlegt.": "No open assumptions — all confirmed or refuted.",
+      "Laufend: „{0}“ — keine offenen Annahmen.": "Ongoing: \"{0}\" — no open assumptions.",
+      "Laufende Vorgänge": "Ongoing cases",
+      "Neuer Vorgang": "New case",
+      "Noch keine Erkenntnisse oder Entscheidungen erfasst.": "No insights or decisions recorded yet.",
+      "Offene Annahmen": "Open assumptions",
+      "Ohne Aussage": "No statement",
+      "Ohne Titel": "Untitled",
+      "Prüfung": "Review",
+      "Prüfung fällig": "Review due",
+      "Prüfung {0}": "Review {0}",
+      "Regel „{0}“ ist zur Überprüfung fällig (seit {1}).": "Rule \"{0}\" is due for review (since {1}).",
+      "Regeln gibt ausschließlich die freigebende Leitung frei — nicht per Drag & Drop und nie die KI. Öffne die Regel und nutze den Freigabe-Ablauf.": "Rules can only be approved by the approving manager — not via drag & drop and never by the AI. Open the rule and use the approval workflow.",
+      "Regeln im Entwurf": "Draft rules",
+      "Zuletzt erfasstes Wissen": "Recently recorded knowledge",
+      "kein Prüftermin": "no review date",
+      "ohne Gewissheit": "no certainty",
+      "{0} Regeln sind zur Überprüfung fällig, zuerst „{1}“.": "{0} rules are due for review, first \"{1}\".",
+      "Überfällige Annahmen": "Overdue assumptions",
+      "Überprüfung bestätigen": "Confirm review",
+      "„{0}“ verschoben": "\"{0}\" moved",
+      "„{0}“ überprüft — nächste Prüfung {1}": "\"{0}\" reviewed — next review {1}"
+    }
+  },
+  "v": 1
+}

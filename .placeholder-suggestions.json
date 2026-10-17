@@ -1,0 +1,55 @@
+{
+  "VorgaengeDialog.tsx": {
+    "titel": "z. B. Migration Buchhaltung",
+    "beschreibung": "Worum ging es im Vorgang?",
+    "fachgebiet": "z. B. Controlling, IT",
+    "startdatum": "Wann begann der Vorgang?",
+    "abschlussdatum": "Wann wurde er abgeschlossen?",
+    "anforderungen": "Was wurde anfangs gefordert?",
+    "randbedingungen": "Welche Bedingungen galten tatsächlich?",
+    "werkzeuge": "z. B. Excel, BPMN",
+    "verantwortlich_vorname": "z. B. Anna",
+    "verantwortlich_nachname": "z. B. Müller"
+  },
+  "EntscheidungenDialog.tsx": {
+    "vorgang": "Zu welchem Vorgang?",
+    "titel": "z. B. Umstieg auf neues CRM",
+    "entscheidungsdatum": "Wann wurde entschieden?",
+    "fragestellung": "Welche Frage war zu klären?",
+    "loesungsweg": "Was wurde beschlossen?",
+    "alternativen": "Eine Alternative pro Zeile",
+    "begruendung": "Warum diese Entscheidung?",
+    "entscheider_vorname": "z. B. Anna",
+    "entscheider_nachname": "z. B. Müller"
+  },
+  "AnnahmenDialog.tsx": {
+    "vorgang": "Welcher Vorgang?",
+    "entscheidung": "Welche Entscheidung?",
+    "aussage": "Was wird angenommen?",
+    "pruefdatum": "Wann wurde geprüft?",
+    "pruefergebnis": "Ergebnis und Beleg der Prüfung",
+    "pruefer_vorname": "z. B. Anna",
+    "pruefer_nachname": "z. B. Müller"
+  },
+  "ErkenntnisseDialog.tsx": {
+    "vorgang": "Welcher Vorgang?",
+    "entscheidung": "Welche Entscheidung?",
+    "annahme": "Welche Annahme?",
+    "titel": "z. B. Lieferzeit schwankt stark",
+    "beschreibung": "Was wurde beobachtet?",
+    "erfassungsdatum": "Wann wurde es erfasst?",
+    "geltungsbereich": "Wann gilt die Erkenntnis?"
+  },
+  "RegelnDialog.tsx": {
+    "titel": "z. B. Vier-Augen-Prinzip",
+    "regeltext": "Was gilt?",
+    "geltungsbereich": "Wo gilt die Regel?",
+    "erkenntnis": "Welche Erkenntnis?",
+    "entscheidung": "Welche Entscheidung?",
+    "freigabe_vorname": "z. B. Anna",
+    "freigabe_nachname": "z. B. Müller",
+    "freigabedatum": "Wann wurde freigegeben?",
+    "pruefdatum": "Wann wird geprüft?",
+    "ki_hinweise": "Was gilt für KI?"
+  }
+}

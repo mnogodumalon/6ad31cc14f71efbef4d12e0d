@@ -1,0 +1,344 @@
+{
+  "version": 1,
+  "language": "de",
+  "understanding": {
+    "summary": "Ein organisationales Gedächtnis, das unabhängig von einzelnen KI-Werkzeugen festhält, was die Organisation über ihre Arbeit weiß. Zu jedem Vorgang werden Anforderungen, Randbedingungen, Entscheidungen, Annahmen, Erkenntnisse und daraus abgeleitete Regeln erfasst. Überall wird festgehalten, wie sicher das Wissen ist und woher es stammt (Mensch, KI oder Messung). Regeln werden von Menschen freigegeben, nicht von der KI.",
+    "roles": [
+      "Wissensverantwortliche",
+      "Projektbearbeiter",
+      "Freigebende Leitung"
+    ],
+    "main_tasks": [
+      "Vorgang mit Anforderungen und Randbedingungen erfassen",
+      "Entscheidungen samt Alternativen und Begründung festhalten",
+      "Annahmen später bestätigen oder widerlegen",
+      "Erkenntnisse erfassen und ihre Gewissheit einstufen",
+      "Regeln aus Erkenntnissen ableiten und freigeben",
+      "Regeln regelmäßig überprüfen"
+    ],
+    "platform_roles": [
+      {
+        "persona": "Wissensverantwortliche",
+        "role": "administrator",
+        "apps": [
+          "vorgaenge",
+          "entscheidungen",
+          "annahmen",
+          "erkenntnisse",
+          "regeln"
+        ]
+      },
+      {
+        "persona": "Projektbearbeiter",
+        "role": "datenverarbeitung",
+        "apps": [
+          "vorgaenge",
+          "entscheidungen",
+          "annahmen",
+          "erkenntnisse"
+        ]
+      },
+      {
+        "persona": "Freigebende Leitung",
+        "role": "datenverarbeitung",
+        "apps": [
+          "regeln",
+          "erkenntnisse",
+          "entscheidungen",
+          "vorgaenge",
+          "annahmen"
+        ]
+      }
+    ]
+  },
+  "flows": [
+    {
+      "slug": "entscheidung-festhalten",
+      "label": {
+        "de": "Entscheidung festhalten",
+        "en": "Record a decision"
+      },
+      "description": "Eine Entscheidung zu einem Vorgang erfassen, mit Alternativen, Begründung, Herkunft und Gewissheit, und dabei gleich Annahmen festhalten, auf denen sie beruht.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "entscheidungen",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "vorgang": "picked",
+            "titel": "user",
+            "entscheidungsdatum": "derived:today",
+            "fragestellung": "user",
+            "loesungsweg": "user",
+            "alternativen": "user",
+            "begruendung": "user",
+            "entscheider_vorname": "user",
+            "entscheider_nachname": "user",
+            "herkunft": "user",
+            "gewissheit": "user"
+          },
+          "needs": {}
+        },
+        {
+          "entity": "annahmen",
+          "op": "create",
+          "when": "optional",
+          "fields": {
+            "vorgang": "picked",
+            "entscheidung": "picked",
+            "aussage": "user",
+            "gewissheit": "user",
+            "status": "fixed:offen"
+          },
+          "needs": {}
+        }
+      ],
+      "required": [],
+      "brief": "# Flow `entscheidung-festhalten` — Entscheidung festhalten\nEine Entscheidung zu einem Vorgang erfassen, mit Alternativen, Begründung, Herkunft und Gewissheit, und dabei gleich Annahmen festhalten, auf denen sie beruht.\n\n## Your hook — import it, never rebuild what it owns\n`import { useEntscheidungFesthaltenFlow } from '@/lib/journey/flows/EntscheidungFesthalten';` — generated from the Schreibliste below. It OWNS the form(s), one record search per picked field (columns and filter from the plan) and the submit plan with every fixed and derived value. You compose: `flow.forms.<entity>` for <Bound>/<Field>, `{...flow.picks.<field>.select} {...flow.pick('<field>')}` (or `flow.pickMany` for a multi pick) for <EntitySelectStep>, `flow.validateStep(n)` in StepNav.onNext, `flow.submit` + `flow.formList` for SummaryStep/SuccessStep, `flow.reset()`; what the hook does not own reads through its door `flow.port` — availability `useOccupancy(flow.port, '<entity>', { resource })`, a count `useRecordCount(flow.port, …)` — never import servicePort next to the hook. Options: `steps` (field → step), `items` (how a hit reads, per pick: vorgang, vorgang, entscheidung), `initial`, `messages`. The hook's docblock in .lane-context.md shows the exact call. Never import servicePort, useStepForm, useJourneySubmit, useRecordSearch or useDashboardData in this page — check-intents refuses a page that uses the hook and any of them.\n\n## Steps (in this order)\n1. Vorgang auswählen\n2. Entscheidungsfrage, Lösungsweg, Alternativen und Begründung eintragen\n3. Herkunft und Gewissheit einstufen\n4. Optional eine Annahme zur Entscheidung erfassen\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `entscheidungen`:\n    - `vorgang`: from the record the user picks in this flow\n    - `titel`: the user enters it (bind it through the layer: form.field/…)\n    - `entscheidungsdatum`: derived: today() — set it in the plan step, never ask\n    - `fragestellung`: the user enters it (bind it through the layer: form.field/…)\n    - `loesungsweg`: the user enters it (bind it through the layer: form.field/…)\n    - `alternativen`: the user enters it (bind it through the layer: form.field/…)\n    - `begruendung`: the user enters it (bind it through the layer: form.field/…)\n    - `entscheider_vorname`: the user enters it (bind it through the layer: form.field/…)\n    - `entscheider_nachname`: the user enters it (bind it through the layer: form.field/…)\n    - `herkunft`: the user enters it (bind it through the layer: form.field/…)\n    - `gewissheit`: the user enters it (bind it through the layer: form.field/…)\n- creates `annahmen` (only when the flow needs it):\n    - `vorgang`: from the record the user picks in this flow\n    - `entscheidung`: from the record the user picks in this flow\n    - `aussage`: the user enters it (bind it through the layer: form.field/…)\n    - `gewissheit`: the user enters it (bind it through the layer: form.field/…)\n    - `status`: fixed value `offen` — set it in the plan step's values, never ask\n\n## Reads\n- `vorgaenge` columns titel, fachgebiet, status\n\n## Success page\n- shows: `entscheidungen.titel`, `entscheidungen.gewissheit`\n- next flows to offer: `annahme-pruefen`\n\n## Never write these — another flow or a tool owns them\n- `annahmen.pruefdatum` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefergebnis` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefer_vorname` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefer_nachname` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.vorgang` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.entscheidung` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.annahme` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.art` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.titel` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.beschreibung` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.erfassungsdatum` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.geltungsbereich` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.gewissheit` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.herkunft` (owner: intent `annahme-pruefen`)\n- `regeln.titel` (owner: intent `regel-ableiten`)\n- `regeln.regeltext` (owner: intent `regel-ableiten`)\n- `regeln.geltungsbereich` (owner: intent `regel-ableiten`)\n- `regeln.erkenntnis` (owner: intent `regel-ableiten`)\n- `regeln.entscheidung` (owner: intent `regel-ableiten`)\n- `regeln.gewissheit` (owner: intent `regel-ableiten`)\n- `regeln.status` (owner: intent `regel-ableiten`)\n- `regeln.pruefdatum` (owner: intent `regel-ableiten`)\n- `regeln.ki_hinweise` (owner: intent `regel-ableiten`)\n- `regeln.freigabe_vorname` (owner: intent `regel-freigeben`)\n- `regeln.freigabe_nachname` (owner: intent `regel-freigeben`)\n- `regeln.freigabedatum` (owner: intent `regel-freigeben`)\n"
+    },
+    {
+      "slug": "annahme-pruefen",
+      "label": {
+        "de": "Annahme prüfen",
+        "en": "Review an assumption"
+      },
+      "description": "Eine offene Annahme bestätigen oder widerlegen, mit Beleg, und bei Bedarf direkt eine Erkenntnis daraus festhalten.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "annahmen",
+          "op": "update",
+          "when": "always",
+          "fields": {
+            "status": "user",
+            "pruefdatum": "derived:today",
+            "pruefergebnis": "user",
+            "pruefer_vorname": "user",
+            "pruefer_nachname": "user",
+            "gewissheit": "user"
+          },
+          "needs": {}
+        },
+        {
+          "entity": "erkenntnisse",
+          "op": "create",
+          "when": "optional",
+          "fields": {
+            "vorgang": "picked",
+            "entscheidung": "picked",
+            "annahme": "picked",
+            "art": "user",
+            "titel": "user",
+            "beschreibung": "user",
+            "erfassungsdatum": "derived:today",
+            "geltungsbereich": "user",
+            "gewissheit": "user",
+            "herkunft": "user"
+          },
+          "needs": {}
+        }
+      ],
+      "required": [],
+      "brief": "# Flow `annahme-pruefen` — Annahme prüfen\nEine offene Annahme bestätigen oder widerlegen, mit Beleg, und bei Bedarf direkt eine Erkenntnis daraus festhalten.\n\n## Your hook — import it, never rebuild what it owns\n`import { useAnnahmePruefenFlow } from '@/lib/journey/flows/AnnahmePruefen';` — generated from the Schreibliste below. It OWNS the form(s), one record search per picked field (columns and filter from the plan) and the submit plan with every fixed and derived value. You compose: `flow.forms.<entity>` for <Bound>/<Field>, `{...flow.picks.<field>.select} {...flow.pick('<field>')}` (or `flow.pickMany` for a multi pick) for <EntitySelectStep>, `flow.validateStep(n)` in StepNav.onNext, `flow.submit` + `flow.formList` for SummaryStep/SuccessStep, `flow.reset()`; what the hook does not own reads through its door `flow.port` — availability `useOccupancy(flow.port, '<entity>', { resource })`, a count `useRecordCount(flow.port, …)` — never import servicePort next to the hook. Options: `steps` (field → step), `items` (how a hit reads, per pick: vorgang, entscheidung, annahme), `initial`, `messages`. The hook's docblock in .lane-context.md shows the exact call. This flow CHANGES a record of `annahmen`: `{...flow.picks.annahmen.select} {...flow.pick('annahmen')}` picks it, the hook prefills the form with its current values and updates THAT record — never a create step, never a list from useDashboardData. Never import servicePort, useStepForm, useJourneySubmit, useRecordSearch or useDashboardData in this page — check-intents refuses a page that uses the hook and any of them.\n\n## Steps (in this order)\n1. Offene Annahme auswählen\n2. Prüfergebnis und Beleg eintragen\n3. Als bestätigt oder widerlegt markieren\n4. Optional eine Erkenntnis erfassen\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- updates `annahmen`:\n    - `status`: the user enters it (bind it through the layer: form.field/…)\n    - `pruefdatum`: derived: today() — set it in the plan step, never ask\n    - `pruefergebnis`: the user enters it (bind it through the layer: form.field/…)\n    - `pruefer_vorname`: the user enters it (bind it through the layer: form.field/…)\n    - `pruefer_nachname`: the user enters it (bind it through the layer: form.field/…)\n    - `gewissheit`: the user enters it (bind it through the layer: form.field/…)\n- creates `erkenntnisse` (only when the flow needs it):\n    - `vorgang`: from the record the user picks in this flow\n    - `entscheidung`: from the record the user picks in this flow\n    - `annahme`: from the record the user picks in this flow\n    - `art`: the user enters it (bind it through the layer: form.field/…)\n    - `titel`: the user enters it (bind it through the layer: form.field/…)\n    - `beschreibung`: the user enters it (bind it through the layer: form.field/…)\n    - `erfassungsdatum`: derived: today() — set it in the plan step, never ask\n    - `geltungsbereich`: the user enters it (bind it through the layer: form.field/…)\n    - `gewissheit`: the user enters it (bind it through the layer: form.field/…)\n    - `herkunft`: the user enters it (bind it through the layer: form.field/…)\n\n## Reads\n- `annahmen` columns aussage, gewissheit, vorgang, entscheidung\n\n## Checks BEFORE the write (block the submit with the message when they fail)\n- custom (field=`annahmen.status`, equals=`offen`) — message: „Diese Annahme wurde bereits geprüft.“\n\n## Success page\n- shows: `annahmen.status`, `annahmen.pruefergebnis`\n- next flows to offer: `regel-ableiten`\n\n## Never write these — another flow or a tool owns them\n- `entscheidungen.vorgang` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.titel` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheidungsdatum` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.fragestellung` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.loesungsweg` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.alternativen` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.begruendung` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheider_vorname` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheider_nachname` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.herkunft` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.gewissheit` (owner: intent `entscheidung-festhalten`)\n- `annahmen.vorgang` (owner: intent `entscheidung-festhalten`)\n- `annahmen.entscheidung` (owner: intent `entscheidung-festhalten`)\n- `annahmen.aussage` (owner: intent `entscheidung-festhalten`)\n- `regeln.titel` (owner: intent `regel-ableiten`)\n- `regeln.regeltext` (owner: intent `regel-ableiten`)\n- `regeln.geltungsbereich` (owner: intent `regel-ableiten`)\n- `regeln.erkenntnis` (owner: intent `regel-ableiten`)\n- `regeln.entscheidung` (owner: intent `regel-ableiten`)\n- `regeln.gewissheit` (owner: intent `regel-ableiten`)\n- `regeln.status` (owner: intent `regel-ableiten`)\n- `regeln.pruefdatum` (owner: intent `regel-ableiten`)\n- `regeln.ki_hinweise` (owner: intent `regel-ableiten`)\n- `regeln.freigabe_vorname` (owner: intent `regel-freigeben`)\n- `regeln.freigabe_nachname` (owner: intent `regel-freigeben`)\n- `regeln.freigabedatum` (owner: intent `regel-freigeben`)\n"
+    },
+    {
+      "slug": "erkenntnis-erfassen",
+      "label": {
+        "de": "Erkenntnis erfassen",
+        "en": "Capture a finding"
+      },
+      "description": "Eine Erkenntnis zu einem Vorgang erfassen und mit Entscheidung oder Annahme verknüpfen, mit Gewissheit und Herkunft.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "erkenntnisse",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "vorgang": "picked",
+            "entscheidung": "picked",
+            "annahme": "picked",
+            "art": "user",
+            "titel": "user",
+            "beschreibung": "user",
+            "erfassungsdatum": "derived:today",
+            "geltungsbereich": "user",
+            "gewissheit": "user",
+            "herkunft": "user"
+          },
+          "needs": {}
+        }
+      ],
+      "required": [],
+      "brief": "# Flow `erkenntnis-erfassen` — Erkenntnis erfassen\nEine Erkenntnis zu einem Vorgang erfassen und mit Entscheidung oder Annahme verknüpfen, mit Gewissheit und Herkunft.\n\n## Your hook — import it, never rebuild what it owns\n`import { useErkenntnisErfassenFlow } from '@/lib/journey/flows/ErkenntnisErfassen';` — generated from the Schreibliste below. It OWNS the form(s), one record search per picked field (columns and filter from the plan) and the submit plan with every fixed and derived value. You compose: `flow.forms.<entity>` for <Bound>/<Field>, `{...flow.picks.<field>.select} {...flow.pick('<field>')}` (or `flow.pickMany` for a multi pick) for <EntitySelectStep>, `flow.validateStep(n)` in StepNav.onNext, `flow.submit` + `flow.formList` for SummaryStep/SuccessStep, `flow.reset()`; what the hook does not own reads through its door `flow.port` — availability `useOccupancy(flow.port, '<entity>', { resource })`, a count `useRecordCount(flow.port, …)` — never import servicePort next to the hook. Options: `steps` (field → step), `items` (how a hit reads, per pick: vorgang, entscheidung, annahme), `initial`, `messages`. The hook's docblock in .lane-context.md shows the exact call. Never import servicePort, useStepForm, useJourneySubmit, useRecordSearch or useDashboardData in this page — check-intents refuses a page that uses the hook and any of them.\n\n## Steps (in this order)\n1. Vorgang auswählen\n2. Optional Entscheidung und Annahme wählen\n3. Art, Titel, Beschreibung und Gültigkeitsbereich eintragen\n4. Gewissheit und Herkunft einstufen\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `erkenntnisse`:\n    - `vorgang`: from the record the user picks in this flow\n    - `entscheidung`: from the record the user picks in this flow\n    - `annahme`: from the record the user picks in this flow\n    - `art`: the user enters it (bind it through the layer: form.field/…)\n    - `titel`: the user enters it (bind it through the layer: form.field/…)\n    - `beschreibung`: the user enters it (bind it through the layer: form.field/…)\n    - `erfassungsdatum`: derived: today() — set it in the plan step, never ask\n    - `geltungsbereich`: the user enters it (bind it through the layer: form.field/…)\n    - `gewissheit`: the user enters it (bind it through the layer: form.field/…)\n    - `herkunft`: the user enters it (bind it through the layer: form.field/…)\n\n## Reads\n- `vorgaenge` columns titel, fachgebiet, status\n- `entscheidungen` columns titel, vorgang\n- `annahmen` columns aussage, vorgang, status\n\n## Success page\n- shows: `erkenntnisse.titel`, `erkenntnisse.gewissheit`\n- next flows to offer: `regel-ableiten`\n\n## Never write these — another flow or a tool owns them\n- `entscheidungen.vorgang` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.titel` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheidungsdatum` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.fragestellung` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.loesungsweg` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.alternativen` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.begruendung` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheider_vorname` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheider_nachname` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.herkunft` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.gewissheit` (owner: intent `entscheidung-festhalten`)\n- `annahmen.vorgang` (owner: intent `entscheidung-festhalten`)\n- `annahmen.entscheidung` (owner: intent `entscheidung-festhalten`)\n- `annahmen.aussage` (owner: intent `entscheidung-festhalten`)\n- `annahmen.gewissheit` (owner: intent `entscheidung-festhalten`)\n- `annahmen.status` (owner: intent `entscheidung-festhalten`)\n- `annahmen.pruefdatum` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefergebnis` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefer_vorname` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefer_nachname` (owner: intent `annahme-pruefen`)\n- `regeln.titel` (owner: intent `regel-ableiten`)\n- `regeln.regeltext` (owner: intent `regel-ableiten`)\n- `regeln.geltungsbereich` (owner: intent `regel-ableiten`)\n- `regeln.erkenntnis` (owner: intent `regel-ableiten`)\n- `regeln.entscheidung` (owner: intent `regel-ableiten`)\n- `regeln.gewissheit` (owner: intent `regel-ableiten`)\n- `regeln.status` (owner: intent `regel-ableiten`)\n- `regeln.pruefdatum` (owner: intent `regel-ableiten`)\n- `regeln.ki_hinweise` (owner: intent `regel-ableiten`)\n- `regeln.freigabe_vorname` (owner: intent `regel-freigeben`)\n- `regeln.freigabe_nachname` (owner: intent `regel-freigeben`)\n- `regeln.freigabedatum` (owner: intent `regel-freigeben`)\n"
+    },
+    {
+      "slug": "regel-ableiten",
+      "label": {
+        "de": "Regel ableiten",
+        "en": "Derive a rule"
+      },
+      "description": "Aus einer Erkenntnis oder Entscheidung eine neue Regel als Entwurf anlegen. Freigabe bleibt ein eigener, menschlicher Schritt.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "regeln",
+          "op": "create",
+          "when": "always",
+          "fields": {
+            "titel": "user",
+            "regeltext": "user",
+            "geltungsbereich": "user",
+            "erkenntnis": "picked",
+            "entscheidung": "picked",
+            "gewissheit": "user",
+            "status": "fixed:entwurf",
+            "pruefdatum": "user",
+            "ki_hinweise": "user"
+          },
+          "needs": {}
+        }
+      ],
+      "required": [],
+      "brief": "# Flow `regel-ableiten` — Regel ableiten\nAus einer Erkenntnis oder Entscheidung eine neue Regel als Entwurf anlegen. Freigabe bleibt ein eigener, menschlicher Schritt.\n\n## Your hook — import it, never rebuild what it owns\n`import { useRegelAbleitenFlow } from '@/lib/journey/flows/RegelAbleiten';` — generated from the Schreibliste below. It OWNS the form(s), one record search per picked field (columns and filter from the plan) and the submit plan with every fixed and derived value. You compose: `flow.forms.<entity>` for <Bound>/<Field>, `{...flow.picks.<field>.select} {...flow.pick('<field>')}` (or `flow.pickMany` for a multi pick) for <EntitySelectStep>, `flow.validateStep(n)` in StepNav.onNext, `flow.submit` + `flow.formList` for SummaryStep/SuccessStep, `flow.reset()`; what the hook does not own reads through its door `flow.port` — availability `useOccupancy(flow.port, '<entity>', { resource })`, a count `useRecordCount(flow.port, …)` — never import servicePort next to the hook. Options: `steps` (field → step), `items` (how a hit reads, per pick: erkenntnis, entscheidung), `initial`, `messages`. The hook's docblock in .lane-context.md shows the exact call. Never import servicePort, useStepForm, useJourneySubmit, useRecordSearch or useDashboardData in this page — check-intents refuses a page that uses the hook and any of them.\n\n## Steps (in this order)\n1. Erkenntnis oder Entscheidung wählen\n2. Titel, Regeltext und Geltungsbereich formulieren\n3. Gewissheit und Hinweise zur KI-Nutzung eintragen\n4. Nächste Überprüfung festlegen\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- creates `regeln`:\n    - `titel`: the user enters it (bind it through the layer: form.field/…)\n    - `regeltext`: the user enters it (bind it through the layer: form.field/…)\n    - `geltungsbereich`: the user enters it (bind it through the layer: form.field/…)\n    - `erkenntnis`: from the record the user picks in this flow\n    - `entscheidung`: from the record the user picks in this flow\n    - `gewissheit`: the user enters it (bind it through the layer: form.field/…)\n    - `status`: fixed value `entwurf` — set it in the plan step's values, never ask\n    - `pruefdatum`: the user enters it (bind it through the layer: form.field/…)\n    - `ki_hinweise`: the user enters it (bind it through the layer: form.field/…)\n\n## Reads\n- `erkenntnisse` columns titel, art, gewissheit, herkunft\n- `entscheidungen` columns titel, gewissheit\n\n## Success page\n- shows: `regeln.titel`, `regeln.status`\n- next flows to offer: `regel-freigeben`\n\n## Never write these — another flow or a tool owns them\n- `entscheidungen.vorgang` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.titel` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheidungsdatum` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.fragestellung` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.loesungsweg` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.alternativen` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.begruendung` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheider_vorname` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheider_nachname` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.herkunft` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.gewissheit` (owner: intent `entscheidung-festhalten`)\n- `annahmen.vorgang` (owner: intent `entscheidung-festhalten`)\n- `annahmen.entscheidung` (owner: intent `entscheidung-festhalten`)\n- `annahmen.aussage` (owner: intent `entscheidung-festhalten`)\n- `annahmen.gewissheit` (owner: intent `entscheidung-festhalten`)\n- `annahmen.status` (owner: intent `entscheidung-festhalten`)\n- `annahmen.pruefdatum` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefergebnis` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefer_vorname` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefer_nachname` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.vorgang` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.entscheidung` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.annahme` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.art` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.titel` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.beschreibung` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.erfassungsdatum` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.geltungsbereich` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.gewissheit` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.herkunft` (owner: intent `annahme-pruefen`)\n- `regeln.freigabe_vorname` (owner: intent `regel-freigeben`)\n- `regeln.freigabe_nachname` (owner: intent `regel-freigeben`)\n- `regeln.freigabedatum` (owner: intent `regel-freigeben`)\n"
+    },
+    {
+      "slug": "regel-freigeben",
+      "label": {
+        "de": "Regel freigeben",
+        "en": "Approve a rule"
+      },
+      "description": "Eine Regel im Entwurf durch eine Person freigeben oder als überholt markieren. Die KI gibt nie frei.",
+      "priority": "must",
+      "writes": [
+        {
+          "entity": "regeln",
+          "op": "update",
+          "when": "always",
+          "fields": {
+            "status": "user",
+            "freigabe_vorname": "user",
+            "freigabe_nachname": "user",
+            "freigabedatum": "derived:today",
+            "pruefdatum": "user"
+          },
+          "needs": {}
+        }
+      ],
+      "required": [],
+      "brief": "# Flow `regel-freigeben` — Regel freigeben\nEine Regel im Entwurf durch eine Person freigeben oder als überholt markieren. Die KI gibt nie frei.\n\n## Your hook — import it, never rebuild what it owns\n`import { useRegelFreigebenFlow } from '@/lib/journey/flows/RegelFreigeben';` — generated from the Schreibliste below. It OWNS the form(s), one record search per picked field (columns and filter from the plan) and the submit plan with every fixed and derived value. You compose: `flow.forms.<entity>` for <Bound>/<Field>, `{...flow.picks.<field>.select} {...flow.pick('<field>')}` (or `flow.pickMany` for a multi pick) for <EntitySelectStep>, `flow.validateStep(n)` in StepNav.onNext, `flow.submit` + `flow.formList` for SummaryStep/SuccessStep, `flow.reset()`; what the hook does not own reads through its door `flow.port` — availability `useOccupancy(flow.port, '<entity>', { resource })`, a count `useRecordCount(flow.port, …)` — never import servicePort next to the hook. Options: `steps` (field → step), `items` (how a hit reads, per pick), `initial`, `messages`. The hook's docblock in .lane-context.md shows the exact call. This flow CHANGES a record of `regeln`: `{...flow.picks.regeln.select} {...flow.pick('regeln')}` picks it, the hook prefills the form with its current values and updates THAT record — never a create step, never a list from useDashboardData. Never import servicePort, useStepForm, useJourneySubmit, useRecordSearch or useDashboardData in this page — check-intents refuses a page that uses the hook and any of them.\n\n## Steps (in this order)\n1. Regel im Entwurf auswählen\n2. Herleitung und Gewissheit prüfen\n3. Freigebende Person eintragen\n4. Freigeben oder als überholt markieren\n\n## Schreibliste — the ONLY writes this flow makes (the gate compares your plan steps with this list)\n- updates `regeln`:\n    - `status`: the user enters it (bind it through the layer: form.field/…)\n    - `freigabe_vorname`: the user enters it (bind it through the layer: form.field/…)\n    - `freigabe_nachname`: the user enters it (bind it through the layer: form.field/…)\n    - `freigabedatum`: derived: today() — set it in the plan step, never ask\n    - `pruefdatum`: the user enters it (bind it through the layer: form.field/…)\n\n## Reads\n- `regeln` columns titel, regeltext, gewissheit, erkenntnis, entscheidung\n\n## Checks BEFORE the write (block the submit with the message when they fail)\n- custom (field=`regeln.status`, equals=`entwurf`) — message: „Nur Regeln im Entwurf können freigegeben werden.“\n\n## Success page\n- shows: `regeln.status`, `regeln.freigabedatum`\n\n## Never write these — another flow or a tool owns them\n- `entscheidungen.vorgang` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.titel` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheidungsdatum` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.fragestellung` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.loesungsweg` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.alternativen` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.begruendung` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheider_vorname` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.entscheider_nachname` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.herkunft` (owner: intent `entscheidung-festhalten`)\n- `entscheidungen.gewissheit` (owner: intent `entscheidung-festhalten`)\n- `annahmen.vorgang` (owner: intent `entscheidung-festhalten`)\n- `annahmen.entscheidung` (owner: intent `entscheidung-festhalten`)\n- `annahmen.aussage` (owner: intent `entscheidung-festhalten`)\n- `annahmen.gewissheit` (owner: intent `entscheidung-festhalten`)\n- `annahmen.status` (owner: intent `entscheidung-festhalten`)\n- `annahmen.pruefdatum` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefergebnis` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefer_vorname` (owner: intent `annahme-pruefen`)\n- `annahmen.pruefer_nachname` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.vorgang` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.entscheidung` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.annahme` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.art` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.titel` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.beschreibung` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.erfassungsdatum` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.geltungsbereich` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.gewissheit` (owner: intent `annahme-pruefen`)\n- `erkenntnisse.herkunft` (owner: intent `annahme-pruefen`)\n- `regeln.titel` (owner: intent `regel-ableiten`)\n- `regeln.regeltext` (owner: intent `regel-ableiten`)\n- `regeln.geltungsbereich` (owner: intent `regel-ableiten`)\n- `regeln.erkenntnis` (owner: intent `regel-ableiten`)\n- `regeln.entscheidung` (owner: intent `regel-ableiten`)\n- `regeln.gewissheit` (owner: intent `regel-ableiten`)\n- `regeln.ki_hinweise` (owner: intent `regel-ableiten`)\n"
+    }
+  ],
+  "public_pages": [],
+  "tools": [
+    {
+      "id": "regel-pruefung-erinnern",
+      "purpose": "Sendet täglich eine Sammelmail an den Schlüsselinhaber mit allen freigegebenen Regeln, deren Prüfdatum erreicht oder überschritten ist. Schreibt keine Datensätze."
+    },
+    {
+      "id": "offene-annahmen-erinnern",
+      "purpose": "Sendet wöchentlich eine Sammelmail an den Schlüsselinhaber mit allen offenen Annahmen, deren Prüfdatum erreicht ist oder die noch kein Prüfdatum haben und älter sind. Schreibt keine Datensätze."
+    },
+    {
+      "id": "regel-ueberholt-setzen",
+      "purpose": "Setzt bei Änderung einer Regel den Status auf überholt, wenn die verknüpfte Annahme widerlegt wurde. Reagiert nur bei Update von Annahmen; prüft im Code, ob der Status widerlegt ist."
+    }
+  ],
+  "covered_by_platform": [
+    {
+      "wish": "Alle Einträge einsehen, durchsuchen und filtern",
+      "feature": "search_filter"
+    },
+    {
+      "wish": "Vorgänge, Entscheidungen, Annahmen einzeln erfassen und bearbeiten",
+      "feature": "record_form"
+    },
+    {
+      "wish": "Übersicht nach Gewissheit, Herkunft oder Status",
+      "feature": "distribution_view"
+    },
+    {
+      "wish": "Nachvollziehen, wer was wann geändert hat",
+      "feature": "record_history"
+    },
+    {
+      "wish": "Belege und Dokumente an Einträge anhängen",
+      "feature": "record_attachments"
+    },
+    {
+      "wish": "Wissen unabhängig von Modellen sichern und weitergeben (Export)",
+      "feature": "csv_json_export"
+    },
+    {
+      "wish": "Festlegen, wer Regeln freigeben und bearbeiten darf",
+      "feature": "user_roles"
+    }
+  ],
+  "ownership": {
+    "entscheidungen": {
+      "vorgang": "intent:entscheidung-festhalten",
+      "titel": "intent:entscheidung-festhalten",
+      "entscheidungsdatum": "intent:entscheidung-festhalten",
+      "fragestellung": "intent:entscheidung-festhalten",
+      "loesungsweg": "intent:entscheidung-festhalten",
+      "alternativen": "intent:entscheidung-festhalten",
+      "begruendung": "intent:entscheidung-festhalten",
+      "entscheider_vorname": "intent:entscheidung-festhalten",
+      "entscheider_nachname": "intent:entscheidung-festhalten",
+      "herkunft": "intent:entscheidung-festhalten",
+      "gewissheit": "intent:entscheidung-festhalten"
+    },
+    "annahmen": {
+      "vorgang": "intent:entscheidung-festhalten",
+      "entscheidung": "intent:entscheidung-festhalten",
+      "aussage": "intent:entscheidung-festhalten",
+      "gewissheit": "intent:annahme-pruefen",
+      "status": "intent:annahme-pruefen",
+      "pruefdatum": "intent:annahme-pruefen",
+      "pruefergebnis": "intent:annahme-pruefen",
+      "pruefer_vorname": "intent:annahme-pruefen",
+      "pruefer_nachname": "intent:annahme-pruefen"
+    },
+    "erkenntnisse": {
+      "vorgang": "intent:erkenntnis-erfassen",
+      "entscheidung": "intent:erkenntnis-erfassen",
+      "annahme": "intent:erkenntnis-erfassen",
+      "art": "intent:erkenntnis-erfassen",
+      "titel": "intent:erkenntnis-erfassen",
+      "beschreibung": "intent:erkenntnis-erfassen",
+      "erfassungsdatum": "intent:erkenntnis-erfassen",
+      "geltungsbereich": "intent:erkenntnis-erfassen",
+      "gewissheit": "intent:erkenntnis-erfassen",
+      "herkunft": "intent:erkenntnis-erfassen"
+    },
+    "regeln": {
+      "titel": "intent:regel-ableiten",
+      "regeltext": "intent:regel-ableiten",
+      "geltungsbereich": "intent:regel-ableiten",
+      "erkenntnis": "intent:regel-ableiten",
+      "entscheidung": "intent:regel-ableiten",
+      "gewissheit": "intent:regel-ableiten",
+      "status": "tool:regel-ueberholt-setzen",
+      "pruefdatum": "intent:regel-freigeben",
+      "ki_hinweise": "intent:regel-ableiten",
+      "freigabe_vorname": "intent:regel-freigeben",
+      "freigabe_nachname": "intent:regel-freigeben",
+      "freigabedatum": "intent:regel-freigeben"
+    }
+  },
+  "dashboard": {
+    "focus": [
+      "Offene Annahmen, die noch geprüft werden müssen",
+      "Regeln im Entwurf und Regeln mit fälliger Überprüfung",
+      "Erkenntnisse und Entscheidungen nach Gewissheit",
+      "Laufende Vorgänge und zuletzt erfasstes Wissen"
+    ],
+    "hints": [
+      "Gewissheit sichtbar machen: Hypothese, plausibel, gesichert, belegt",
+      "Herkunft Mensch, KI oder Messung sichtbar halten",
+      "Freigabe von Regeln bleibt eine menschliche Entscheidung"
+    ],
+    "wishes": []
+  }
+}
